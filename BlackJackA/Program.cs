@@ -12,61 +12,83 @@ namespace BlackJackA
         {
             string[] cards = new string[52];
             Random r = new Random();
-            string card;
+            string card = string.Empty;
             int sum = 0;
+            bool cardOk;
 
             for (int i = 0; i < cards.Length; i++)
             {
-                card = string.Empty;
-                switch (r.Next(1, 4))
+                cardOk = false;
+                int iteration = 0;
+                while (!cardOk)
                 {
-                    case 1:
-                        card += 'H';
-                        break;
-                    case 2:
-                        card += 'K';
-                        break;
-                    case 3:
-                        card += 'R';
-                        break;
-                    case 4:
-                        card += 'S';
-                        break;
-                }
+                    card = string.Empty;
+                    switch (r.Next(1, 4))
+                    {
+                        case 1:
+                            card += 'H';
+                            break;
+                        case 2:
+                            card += 'K';
+                            break;
+                        case 3:
+                            card += 'R';
+                            break;
+                        case 4:
+                            card += 'S';
+                            break;
+                    }
 
-                card += r.Next(1, 13);
+                    card += r.Next(1, 13);
+
+                    // Add looping statement checking if card already exists
+                    foreach (string s in cards)
+                    {
+                        if (card == s)
+                        {
+                            cardOk = false;
+                            break;
+                        }
+                        else if (s == null)
+                        {
+                            cardOk = true;
+                            break;
+                        }
+                        else
+                            cardOk = true;
+                    }
+                    iteration++;
+                }
 
                 cards[i] = card;
-
-                // Add looping statement checking if card already exists
-
+                Console.WriteLine(card + ' ' + iteration + " (i = " + i + ')'); //For testing
             }
 
-            foreach (string s in cards)
-                Console.WriteLine(s);
+                foreach (string s in cards)
+                    Console.WriteLine(s);
 
-            //Edit so if-statement only checks for y/n
-            foreach (string s in cards)
-            {
-                Console.WriteLine("Vill du ha ett kort?");
-                if (Console.ReadLine().ToLower() == "ja")
+                //Edit so if-statement only checks for y/n
+                foreach (string s in cards)
                 {
-                    Console.Write(s + ' ');
-                    sum += Convert.ToInt32(s.Substring(1));
-                    if (sum <= 21)
-                        Console.WriteLine("(Poängsumma: " + sum + ')');
-                    else
+                    Console.WriteLine("Vill du ha ett kort?");
+                    if (Console.ReadLine().ToLower() == "ja")
                     {
-                        Console.WriteLine("Du förlorade! (Poängsumma: " + sum + ')');
-                        break;
+                        Console.Write(s + ' ');
+                        sum += Convert.ToInt32(s.Substring(1));
+                        if (sum <= 21)
+                            Console.WriteLine("(Poängsumma: " + sum + ')');
+                        else
+                        {
+                            Console.WriteLine("Du förlorade! (Poängsumma: " + sum + ')');
+                            break;
+                        }
                     }
+                    else
+                        break;
                 }
-                else
-                    break;
-            }
 
-            if (sum == 21)
-                Console.WriteLine("Grattis 21!");
+                if (sum == 21)
+                    Console.WriteLine("Grattis 21!");
+            }
         }
     }
-}
